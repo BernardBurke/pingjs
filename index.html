@@ -2,9 +2,11 @@
     <meta http-equiv="refresh" content="5">
     <script src="./ping.js"></script>
     <script>
-    var do_ping = function() {
-        ping(document.getElementById('pingurl').value).then(function(delta) {
-            alert(delta);
+    window.onload = function() {
+        ping('http://abc.net.au').then(function(delta) {
+            console.log('time was ' + delta.toString());
+            document.write('time was ' + delta.toString());
+            // alert(delta);
         }).catch(function(error) {
             alert(String(error));
         });
@@ -12,6 +14,5 @@
     </script>
 </head>
 <body>
-    <input id='pingurl' type='text' value='http://google.com'></input>
-    <button onclick='do_ping()'>Ping</button>
+Hello there.
 </body>
