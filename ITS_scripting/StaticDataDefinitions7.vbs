@@ -1,8 +1,9 @@
 ' ============================================================================== 
 ' Script.........: [StaticDataDefinitions.vbs] 
-' Author.Email...: [ben.burke@internode.on.net] 
-' Version........: 1.0 
+' Author.Email...: [me@benburke.dev] 
+' Version........: 7.0 
 ' Date Written...........: 31-Jul-2009 
+' Updated.................: 29-Oct-2021 - removed all site specifics
 '
 ' One Line Description: This is a simple include file for all static data 
 ' 			definitions that are in use across different modules.
@@ -20,88 +21,9 @@
 ' ADO constants include file for VBScript
 '
 '--------------------------------------------------------------------
-
-'
-' General variables
-
-
-Const MessageLogging = True		' by default, all calls to Message write logfile entries
-Const LoggAppend = True			' by default, messages are appended to existing logfile (if exists)
-
-
-
-' MM SMS variables
-
-Const mmUsername = "nswpath"	' as the name suggests...
-Const mmPassword = "dogsballs"		' these are authentication to Message Media account
-
-Const mmProxyServer = "10.202.34.100"	' Given by Max W for testing
-Const mmProxyPort   = 8080		' No great surprise here.
-
-Dim DebugLevel      			' Can alter this to increate detail in logging
-
-	DebugLevel = 0
-	
-	
-Dim ScriptName				' Will be set by call in template
-Dim ScriptTimeStamp			' Will be set by initialise
-Dim ScriptDateStamp			' 
-
-
-Const ADS_SCOPE_SUBTREE = 2		' used during ADSI queries to extend the scope to subtree 
-
-
-' here is an LDAP query string for all of our forests
-Const LGA_LDAP 		= "'LDAP://LGA.WAN/DC=LGA,DC=WAN'"
-Const LGINZ_LDAP 	= "'LDAP://LGINZ.WAN/DC=LGINZ,DC=WAN'"
-Const WFI_LDAP		= "'LDAP://WFI.WAN/DC=WFI,DC=WAN'"
-Const OAMPS_LDAP 	= "'LDAP://OAMPS.COM.AU/DC=OAMPS,DC=COM,DC=AU'"
-Const WESINS_LDAP	= "'LDAP://WESINS.WIROOT.INTERNAL/DC=WESINS,DC=WIROOT,DC=INTERNAL'"
-
-
-Const strDomainName = "DC=LGA,DC=WAN"
-
-Dim status					' everybody needs a status variable called status
-
-
-Dim fsoLogger					' filesystem objects for logger
-Dim tsoLogger					'
-Dim LogfileName					' base on script name, locate in ITS_LOGS
-
-
-Const ForReading = 1
-Const ForWriting = 2
-Const ForAppending = 8
-
-
-Const smtpServer = "mail.internode.on.net"		' used by email routines
-Const prodSupportEmail = "ben.burke@internode.on.net" ' until I leave. Ha ha!
-
-' todo - the following static variables could be overridden by command line arguments
-Dim	ConnxSingleton 
-	ConnxSingleton = False				' Force all Connx selects to do Maxrow=ConnxSingletonCount - overridden by command line
-
-Dim 	ConnxSingletonCount
-	ConnxSingletonCount = 10			' How many rows in Maxrow? - overridden by command line
-
-Dim 	FieldMatchDebug
-	FieldMatchDebug = False				' Print a debug line for all generic field matches
-
-Dim	WriteFlatFile 
-	WriteFlatFile = True				' Do we want to write flat files or just s/sheet
-
-Dim	SingleEpisode
-	SingleEpisode = 0				' Allow the SingleEpisode mode - if this value is not 0, get just one episode
-
-Dim 	ConnxHost	
-	ConnxHost = "connx.dcdel.com.au"		' Allow a command line arg to select the connx server 
-
-
-
-
-
 Const adChapter = 136
 
+Const ADS_SCOPE_SUBTREE = 2		' used during ADSI queries to extend the scope to subtree 
 
 '---- CursorTypeEnum Values ----
 Const adOpenForwardOnly = 0
@@ -297,3 +219,39 @@ Const adCmdUnknown = 0
 Const adCmdText = &H0001
 Const adCmdTable = &H0002
 Const adCmdStoredProc = &H0004
+
+'
+' General variables
+
+
+Const MessageLogging = True		' by default, all calls to Message write logfile entries
+Const LoggAppend = True			' by default, messages are appended to existing logfile (if exists)
+
+
+
+
+Dim DebugLevel      			' Can alter this to increate detail in logging
+
+	DebugLevel = 0
+	
+	
+Dim ScriptName				' Will be set by call in template
+Dim ScriptTimeStamp			' Will be set by initialise
+Dim ScriptDateStamp			' 
+
+
+
+Dim status					' everybody needs a status variable called status
+
+
+Dim fsoLogger					' filesystem objects for logger
+Dim tsoLogger					'
+Dim LogfileName					' base on script name, locate in ITS_LOGS
+
+
+Const ForReading = 1
+Const ForWriting = 2
+Const ForAppending = 8
+
+
+
