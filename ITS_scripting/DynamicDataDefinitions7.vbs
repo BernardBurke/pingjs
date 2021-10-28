@@ -1,8 +1,9 @@
 ' ============================================================================== 
 ' Script.........: [DynamicDataDefinitions.vbs] 
-' Author.Email...: [ben.burke@internode.on.net] 
-' Version........: 1.0 
+' Author.Email...: [me@benburke.dev] 
+' Version........: 7.0 
 ' Date Written...........: 31-Jul-2009 
+' Updated.................: 29-Oct-2021
 '
 ' One Line Description: This is a simple include file for all dynamic data 
 ' 			definitions that are in use across different modules.
