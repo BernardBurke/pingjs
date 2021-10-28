@@ -1,0 +1,136 @@
+<job id="script_name_token">
+<script language="VBScript" src="StaticDataDefinitions7.vbs"/>
+<script language="VBScript" src="DynamicDataDefinitions7.vbs"/>
+<script language="VBScript" src="CommonFunctionsLibrary7.vbs"/>
+<script language="VBScript">
+' ============================================================================== 
+' Script.........: [script_name_token.wsf] 
+' Author.Email...: [ben.burke@internode.on.net] 
+' Version........: 1.0 
+' Date Written...........: date_token
+'
+' One Line Description: one_line_token
+' 			
+' 
+' For Detailed Description and revision history, go to end of file 
+' (this saves the interpreter from 'reading' the comments.
+
+
+Option Explicit 
+On Error Goto 0 
+
+
+' -------------------------------------------------------------------------- 
+'  Declare Constants 
+' -------------------------------------------------------------------------- 
+' -------------------------------------------------------------------------- 
+'  Declare Variables 
+' -------------------------------------------------------------------------- 
+
+
+' -------------------------------------------------------------------------- 
+'  Do something 
+' -------------------------------------------------------------------------- 
+
+
+initialise
+
+
+CommandLineArgs
+
+Main
+
+' -------------------------------------------------------------------------- 
+' -------------------------------------------------------------------------- 
+'  Subroutine.....: 
+'  Purpose........: 
+'  Arguments......: 
+'  Example........: 
+'  Requirements...: 
+'  Notes..........: 
+' -------------------------------------------------------------------------- 
+
+sub Main
+
+end sub
+
+' -------------------------------------------------------------------------- 
+' -------------------------------------------------------------------------- 
+'  Subroutine.....: 
+'  Purpose........: 
+'  Arguments......: 
+'  Example........: 
+'  Requirements...: 
+'  Notes..........: 
+' -------------------------------------------------------------------------- 
+' -------------------------------------------------------------------------- 
+
+' -------------------------------------------------------------------------- 
+'  Subroutine.....: CommandLineArgs
+'  Purpose........: Turn Command line arguements into variables
+'  Arguments......: None
+'  Example........: 
+'  Requirements...: Variables need to be declared in higher scope
+'  Notes..........: Plan to generalise this and move to function library
+' -------------------------------------------------------------------------- 
+
+Sub CommandLineArgs()
+
+	dim NamedArgs 
+
+
+	set NamedArgs = wscript.arguments.named
+	
+	
+
+	if NamedArgs.exists("debug") then
+	
+		
+	
+		debuglevel = NamedArgs.item("debug")
+
+		message "Debuglevel set to " & debuglevel
+
+		
+		
+	end if 
+	
+end sub
+
+' -------------------------------------------------------------------------- 
+' -------------------------------------------------------------------------- 
+'  Function.......: function_name
+'  Purpose........: 
+'  Arguments......: 
+'  Returns.........:
+'  Example........: 
+'  Requirements...: 
+'  Notes..........: 
+' -------------------------------------------------------------------------- 
+
+
+' ============================================================================== 
+'  End  Of Script 
+' ============================================================================== 
+'  Description....: ' script_name_token.vbs
+'  
+'	Lengthy Description here.
+'  
+'  
+'
+
+'  
+'  Notes..........: 
+'  
+'  Customize......: 
+' ============================================================================== 
+'  Revised By.....: 
+'  Email..........: 
+'  Revision Date..: 
+'  Revision Notes.: 
+'  
+' ============================================================================== 
+' ============================================================================== 
+
+</script>
+</job>
