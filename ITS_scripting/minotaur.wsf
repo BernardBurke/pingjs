@@ -29,6 +29,11 @@ On Error Goto 0
 
 dim ping_target ' hostname or ip 
 dim objWMIService ' created and destroyed in main()
+dim ping_loop_count ' number of pings to fire 
+dim log_file_path ' path to log'
+dim log_file_name ' constructed with context user etc
+dim log_file_full_name ' as per above
+dim append_results_to_log ' boolean, off by default
 
 ' -------------------------------------------------------------------------- 
 '  Do something 
@@ -37,75 +42,20 @@ dim objWMIService ' created and destroyed in main()
 
 initialise
 
+log_file_path = GetProcessEnvironmentVariable("TEMP")
+
 
 CommandLineArgs
 
+
+
 Main
-
-function GetHostByName(hostname)
-' returns IP
-	Set objJava = CreateObject( "JavaWebStart.isInstalled" )
-	strIP = objJava.dnsResolve( "hostname" )
-	WScript.Echo "IP address of " & hostname & " is " & strIP 
-	Set objJava = Nothing
-end function 
-
-function DoPings(ipaddress, status, response_time)
-
-    dim wmistring,colItems,objItem
-
-    wmistring = "Select * From win32_PingStatus where address='" & ipaddress & "'" 
-
-    wscript.echo "WmiString ", wmistring
-
-    Set colItems = objWMIService.ExecQuery(wmistring)
-    
-    for each objItem in colItems
-        status = objItem.statuscode
-        response_time = objItem.ResponseTime
-    next
-
-end function
-
-' -------------------------------------------------------------------------- 
-' -------------------------------------------------------------------------- 
-'  Subroutine.....: ping_average
-'  Purpose........: calls WMI to execute pings to an IP
-'  Arguments......: target_ip, loop_count,average_value
-'  Example........: 
-'  Requirements...: ITS_FRAMEWORK, WMI
-'  Notes..........: 
-' -------------------------------------------------------------------------- 
-
-function ping_average(target_ip, loop_count, average_value) 
-
-	dim objWMIService
-	dim colItems
-	dim objItem
-	dim Counter ' loop_count from parameters
-	dim AverageResponse ' returned average
-	dim status, response_time ' wmi status
-
-	Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
-
-	Counter = 0
-	AverageResponse = 0 
-	Do while Counter < loop_count
-		' wscript.echo "Counter " & counter 
-		DoPings target_ip , status, response_time 
-		counter = counter + 1
-		AverageResponse = ( (AverageResponse + response_time) / counter )
-	Loop
-
-	wscript.echo "Average was " & AverageResponse
-
-end function
 
 
 
 sub Main
 
-	dim average_value
+	dim average_value, this_record, log_status
 
 
 	Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
@@ -119,7 +69,23 @@ sub Main
 
 		' IP_address = GetHostByName(ping_target)
 
-	ping_average ping_target, 10 , average_value
+	message "About to do " & ping_loop_count & " executions"
+
+	if ping_average( ping_target, ping_loop_count , average_value) Then
+		message "Success with average " & average_value
+	else
+		message "Ping failure"
+	end if 
+
+	this_record = username & "," & now() & "," & average_value & "," & ping_target & "," & ping_loop_count
+
+	if append_results_to_log Then
+		log_status = Append_to_file(log_file_full_name, this_record)
+		message "Appended to " & log_file_full_name
+	end if
+
+
+	Set objWMIService = nothing
 		
 end sub
 
@@ -149,7 +115,30 @@ Sub CommandLineArgs()
 
 
 	set NamedArgs = wscript.arguments.named
+
+	if NamedArgs.exists("log") then
+
+		log_file_full_name = log_file_path & "\" & scriptname & "_" & username & ".log"
+		
+		append_results_to_log = true
+		
+		message "Appending to " & log_file_full_name
+
+	end if
 	
+	if NamedArgs.exists("loop") then
+
+		ping_loop_count = NamedArgs.item("loop")
+
+		message  "Ping Loops " & ping_loop_count
+	else
+
+		ping_loop_count = 10 ' default
+
+		message "defaulting Ping Loops to" & ping_loop_count
+
+	end if
+
 	if NamedArgs.exists("ping") then
 
 		ping_target = NamedArgs.item("ping")
@@ -157,6 +146,7 @@ Sub CommandLineArgs()
 		message  "Ping Target " & ping_target
 
 	end if
+
 
 	if NamedArgs.exists("debug") then
 	

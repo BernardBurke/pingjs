@@ -148,6 +148,115 @@ sub message (messagetext)
 	
 end sub
 
+function DoPings(ipaddress, status, response_time)
+
+    dim wmistring,colItems,objItem
+
+    wmistring = "Select * From win32_PingStatus where address='" & ipaddress & "'" 
+
+    ' todo debug wscript.echo "WmiString ", wmistring
+
+    Set colItems = objWMIService.ExecQuery(wmistring)
+
+	
+    
+    for each objItem in colItems
+        status = objItem.statuscode
+        response_time = objItem.ResponseTime
+    next
+
+	if status = 0 Then
+		' todo Debug
+		DoPings = True 
+	else
+		DoPings = False 
+	end if
+
+end function
+
+function Append_to_file(full_file_path,record)
+' this function is meant to add a single record to a given files
+' a poor choice of you need to do thousands of append_results_to_log
+	dim localTS
+
+	message full_file_path
+	set localTS = fsoLogger.OpenTextFile(full_file_path,ForAppending, true) ' create if not exists
+
+	localTS.WriteLine(record)
+
+	localTS.Close()
+
+
+end function
+
+
+function GetProcessEnvironmentVariable(variable_name)
+' returns environment variable '
+
+	dim localValue, wshProcessEnv
+	Set wshShell = CreateObject( "WScript.Shell" )
+	Set wshProcessEnv = wshShell.Environment( "PROCESS" )
+	'todo Debug WScript.Echo "SYSTEM:  TEMP=" & wshSystemEnv( "TEMP" )
+
+	localValue = wshProcessEnv(variable_name)
+
+	Set wshProcessEnv = Nothing
+	Set wshShell     = Nothing
+
+	GetProcessEnvironmentVariable = localValue
+
+end function
+
+' -------------------------------------------------------------------------- 
+' -------------------------------------------------------------------------- 
+'  Subroutine.....: ping_average
+'  Purpose........: calls WMI to execute pings to an IP
+'  Arguments......: target_ip, loop_count,average_value
+'  Example........: 
+'  Requirements...: ITS_FRAMEWORK, WMI
+'  Notes..........: 
+' -------------------------------------------------------------------------- 
+
+function ping_average(target_ip, loop_count, average_value) 
+
+	dim objWMIService
+	dim colItems
+	dim objItem
+	dim Counter ' loop_count from parameters
+	dim AverageResponse ' returned average
+	dim status, response_time ' wmi status
+	dim lstatus ' function call status
+
+
+	Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
+
+	loop_count =cInt(loop_count) ' became a string as a parameter and broke the while loop 
+
+	Counter = 0
+	AverageResponse = 0 
+	Do while Counter < loop_count
+		' todo Debug wscript.echo "Counter " & counter & " loop count " & loop_count
+		lstatus = DoPings (target_ip , status, response_time)
+		'if 	DoPings( target_ip , status, response_time) then 
+
+		if lstatus <> 0 then   
+			counter = counter + 1
+			AverageResponse = ( (AverageResponse + response_time) / counter )
+		else
+			
+			ping_average = False
+		
+			exit function
+
+		end if
+	Loop
+
+	' todo Debug wscript.echo "Average was " & AverageResponse
+	average_value = round(AverageResponse,4)
+	ping_average = true
+
+end function
+
 
 ' -------------------------------------------------------------------------- 
 ' -------------------------------------------------------------------------- 
