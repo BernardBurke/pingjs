@@ -1,3 +1,12 @@
+The pingjs README is below.js
+
+
+This repo contains an updated version of the script library described at https://github.com/BernardBurke/Bscripting
+
+
+
+
+
 # pingjs
 JavaScript ping API for use in a web browser context.  Released under the BSD-3-Clause license, see 
 LICENSE.  
