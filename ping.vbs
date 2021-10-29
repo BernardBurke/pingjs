@@ -12,9 +12,15 @@ Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
 Counter = 0
 AverageResponse = 0 
 
-function DoPings(status, timeout)
+function DoPings(ipaddress, status, timeout)
 
-    Set colItems = objWMIService.ExecQuery("Select * From win32_PingStatus where address='1.1.1.1'")
+    dim wmistring 
+
+    wmistring = "Select * From win32_PingStatus where address='" & ipaddress & "'" 
+
+    'wscript.echo "WmiString ", wmistring
+
+    Set colItems = objWMIService.ExecQuery(wmistring)
     
     for each objItem in colItems
         status = objItem.statuscode
@@ -25,7 +31,7 @@ end function
 
 Do while Counter < 100
     ' wscript.echo "Counter " & counter 
-    DoPings status,timeout 
+    DoPings "1.1.1.1",status,timeout 
     counter = counter + 1
     AverageResponse = ( (AverageResponse + timeout) / counter )
 Loop
