@@ -34,6 +34,8 @@ dim log_file_path ' path to log'
 dim log_file_name ' constructed with context user etc
 dim log_file_full_name ' as per above
 dim append_results_to_log ' boolean, off by default
+dim downloadURL ' for http get download
+dim downloadFilePath ' as in downloadURL target
 
 ' -------------------------------------------------------------------------- 
 '  Do something 
@@ -55,7 +57,7 @@ Main
 
 sub Main
 
-	dim average_value, this_record, log_status
+	dim average_value, this_record, get_status, get_milliseconds, log_status, Milliseconds
 
 
 	Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
@@ -77,7 +79,35 @@ sub Main
 		message "Ping failure"
 	end if 
 
+	if downloadFilePath <> "" Then
+
+		get_status = DownloadFile(downloadURL, downloadFilePath, Milliseconds)
+
+		if get_status Then
+			
+			message "Download success " & downloadFilePath
+
+			this_record = this_record & "," & downloadURL & "," & Milliseconds
+
+		end if 
+
+	end if 
+
 	this_record = username & "," & now() & "," & average_value & "," & ping_target & "," & ping_loop_count
+
+	if downloadFilePath <> "" Then
+
+		get_status = DownloadFile(downloadURL, downloadFilePath, Milliseconds)
+
+		if get_status Then
+			
+			message "Download success " & downloadFilePath
+
+			this_record = this_record & "," & downloadURL & "," & Milliseconds
+
+		end if 
+
+	end if 
 
 	if append_results_to_log Then
 		log_status = Append_to_file(log_file_full_name, this_record)
@@ -147,6 +177,30 @@ Sub CommandLineArgs()
 
 	end if
 
+	if NamedArgs.exists("download") then
+
+		downloadURL = NamedArgs.item("download")
+
+		message "Download URL " & downloadURL
+
+	end if 
+
+
+	if NamedArgs.exists("downloadfile") then 
+
+		downloadFilePath = NamedArgs.item("downloadfile")
+
+		message "Download File " & downloadFilePath
+
+	else
+
+		if not isNull(downloadFilePath) then ' supply a default
+
+			downloadFilePath = scriptname & "_download.file"
+		
+		end if
+
+	end if 
 
 	if NamedArgs.exists("debug") then
 	

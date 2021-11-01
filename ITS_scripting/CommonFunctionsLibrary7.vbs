@@ -105,6 +105,49 @@ sub Initialise ()
 	
 end sub
 
+Function DownloadFile(ImageURL, SavePath, Milliseconds)
+
+	Dim WinHttpReq
+	Dim StartTime
+	Dim EndTime
+	Dim RunTime
+	Dim ReqSuccess
+	Dim t ' timer
+
+	t = Timer
+
+	message "Downloading " & ImageURL & " to " & SavePath
+
+
+	Set WinHttpReq = CreateObject("Microsoft.XMLHTTP")
+	WinHttpReq.Open "GET", ImageURL, False
+	WinHttpReq.send
+
+	If WinHttpReq.Status = 200 Then
+		Set MyStream = CreateObject("ADODB.Stream")
+		MyStream.Open
+		MyStream.Type = 1
+		MyStream.Write WinHttpReq.responseBody
+		MyStream.SaveToFile SavePath, 2 ' 1: Don't overwrite, 2: Overwrite
+		MyStream.Close
+		ReqSuccess = true
+	End If
+
+	if ReqSuccess Then
+
+		RunTime = datediff("s",StartTime, EndTime)
+			' Int() behaves exactly like Floor() function, i.e. it returns the biggest integer lower than function's argument
+		temp = Int(t)
+
+		Milliseconds = Int((t-temp) * 1000)
+
+		message "Run time is " & Milliseconds & " Milliseconds"
+
+		DownloadFile = true 
+
+	end if
+
+End Function
 
 ' -------------------------------------------------------------------------- 
 ' -------------------------------------------------------------------------- 
