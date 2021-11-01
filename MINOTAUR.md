@@ -68,7 +68,21 @@ ben,29/10/2021 1:43:53 PM,1.7679,techcrunch.com,100
 # Next features 
 
 - http GET without Cache (check a webservers health)
+This has just been implemented! Example below
 - rest service call with timings (GET and POST)
 - customise **message** function in CommonFunctionsLibrary to post to splunk and zabbix
 
+
+### Example with http GET timings 
+
+```
+cscript ITS_scripting\minotaur.wsf /debug:1 /ping:www.integralife.com /loop:10 /log /download:"https://deadline.com/wp-content/uploads/2019/05/amc.jpg" /downloadfile:%TEMP%/fred.jpg
+```
+
+### Log contents
+
+```
+ben,2/11/2021 9:04:40 AM,1.4202,www.integralife.com,10,https://deadline.com/wp-content/uploads/2019/05/amc.jpg,591
+ben,2/11/2021 9:05:04 AM,1.0148,www.integralife.com,10,https://deadline.com/wp-content/uploads/2019/05/amc.jpg,896
+```
 
